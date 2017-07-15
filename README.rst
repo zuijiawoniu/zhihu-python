@@ -1,12 +1,19 @@
 zhihu-python：获取知乎信息
 ===============================
 
+**注意: 本项目不再维护更新！**
+
+.. contents::
+
+
 介绍
 ----
 
-zhihu-python 采用 python2.7 编写，用来方便地获取知乎上各种内容的信息，并且可以方便地将答案备份导出为 txt 或 markdown 文件。由于知乎官方目前没有提供 api，所以有了此项目地存在。
+zhihu-python 采用 Python2.7 编写，用来方便地获取知乎上各种内容的信息，并且可以方便地将答案备份导出为 txt 或 markdown 文件。由于知乎官方目前没有提供 api，所以有了此项目的存在。
 
-**注:本项目代码均在Ubuntu14.04上使用python2.7.6编写和测试通过，其他环境可能存在一定问题。**
+使用 Python3 的类似项目可以参见：`zhihu-py3 <https://github.com/7sDream/zhihu-py3>`_ 。使用 PHP 的类似项目可以参见：`zhihu-php <https://github.com/ahonn/zhihu-php>`_ 。使用 Go 的类似项目可以参见：`zhihu-go <https://github.com/DeanThompson/zhihu-go>`_ 。
+
+**注: 本项目代码均在 Ubuntu14.04 上使用 python2.7.6 编写和测试通过，其他环境可能存在一定问题。**
 
 获取某个问题下的全部回答并导出，很简单：
 
@@ -38,42 +45,74 @@ zhihu-python 采用 python2.7 编写，用来方便地获取知乎上各种内�
         
 导出的markdown，txt文件示例请见该项目的markdown，text文件夹。当然，想要知道某大V关注了那些人，提了什么问题也不在话下，详情请见：快速开始。        
 
-依赖
------
 
-- 使用 `Beautiful Soup 4 <http://www.crummy.com/software/BeautifulSoup/>`_ 解析 html 文档
-- 使用 `requests <https://github.com/kennethreitz/requests>`_ 处理 http 请求
-- 使用 `html2text <https://github.com/aaronsw/html2text>`_ 进行格式转换
-
-没有的话可以使用 pip 安装：
-
-.. code-block:: bash
-
-    $ pip install requests
-    $ pip install beautifulsoup4
-    $ pip install html2text
-
-或者使用
-
-.. code-block:: bash
-
-    $ pip install -r requirements.txt
-
-**注意** ：如果同时安装了 python3 和 python2 ， pip 命令可能默认安装的是 python3 版本的包，故需将上述命令中的 pip 换成pip2 （比如在我的Ubuntu上）。
 
 快速开始
 ---------
 
-zhihu-python 主要文件为 zhihu.py ，配置文件为 config.ini , 将这两个文件下载到你的工作目录，并修改
-config.ini 文件中的 email 为你的知乎账户邮箱，修改 password 为你的知乎账户密码（用作模拟登录）。
+准备
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-(2015.2.1更新)由 `@Eureka22 <https://github.com/Eureka22>`_ 添加了cookies支持，若由于验证码原因出现登录失败，请查看浏览器的cookies，填写 config.ini 文件中的 cookies 项后重试（当然，你的cookies可能与  cogfig.ini 文件中的某些项不同，比如没有“c_c”，可能会多出“_ga”，把你的补充上去即可）。如能正常登录，cookies 项可以不填写。
+**Tips** :
 
-**注意** ：一定记得修改config.ini文件，否则无法正常使用。
+1.  确保你的系统里面已经安装了 `Python2.7 <https://www.python.org/>`_ ，不同作业系统如何安装不再赘述。
+2.  检查你系统中 `python` 和 `pip` 的版本, 如果不属于 `python2.7` , 请在执行代码范例时，自行将 `python` 和 `pip` 分别替换成 `python2.7` 和 `pip2` 。
+3.  确保你的系统中安装了 `git` 程序 以及 `python-pip` 。
 
- 
+
+**克隆本项目**
+
+
+.. code:: bash
+
+  git clone git@github.com:egrcc/zhihu-python.git
+  cd zhihu-python
+
+
+**解决依赖**
+
+* `Beautiful Soup 4 <http://www.crummy.com/software/BeautifulSoup/>`_
+* `requests <https://github.com/kennethreitz/requests>`_
+* `html2text <https://github.com/aaronsw/html2text>`_
+* `termcolor <https://pypi.python.org/pypi/termcolor>`_
+* `lxml <https://github.com/lxml/lxml>`_
+
+.. code:: bash
+
+  sudo pip install -r requirements.txt
+
+
+or
+
+.. code:: bash
+
+  sudo pip2 install -r requirements.txt
+
+
+
+**登录知乎**
+
+
+登录 `知乎` 生成身份信息, 保存在当前目录的 `cookies` 文件中。
+
+.. code:: bash
+  
+  python auth.py
+
+
+**执行测试**
+
+
+.. code:: bash
+
+  python test.py
+
+不出意外，一切应该完美运行 :))
+
+
+
 Question：获取问题信息
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Question 代表一个问题，处理知乎问题相关操作。创建一个 Question 对象需传入该问题的 url ，如：
 
@@ -93,7 +132,7 @@ Question 代表一个问题，处理知乎问题相关操作。创建一个 Ques
     
     url = "http://www.zhihu.com/question/24269892"
     question = Question(url)
-    
+
     # 获取该问题的标题
     title = question.get_title()
     # 获取该问题的详细描述
@@ -104,15 +143,17 @@ Question 代表一个问题，处理知乎问题相关操作。创建一个 Ques
     followers_num = question.get_followers_num()
     # 获取该问题所属话题
     topics = question.get_topics()
+    # 获取该问题被浏览次数
+    visit_times = question.get_visit_times()
     # 获取排名第一的回答
     top_answer = question.get_top_answer()
     # 获取排名前十的十个回答
     top_answers = question.get_top_i_answers(10)
     # 获取所有回答
     answers = question.get_all_answers()
-    
-    print title # 输出：现实可以有多美好？
-    print detail 
+
+    print title  # 输出：现实可以有多美好？
+    print detail
     # 输出：
     # 本问题相对于“现实可以多残酷？传送门：现实可以有多残酷？
     # 题主：       昨天看了“现实可以有多残酷“。感觉不太好，所以我
@@ -121,23 +162,24 @@ Question 代表一个问题，处理知乎问题相关操作。创建一个 Ques
     # 是“晒幸福“比赛。所以大家从“现实，实际”的角度出发，讲述自己的
     # 美好故事，让大家看看社会的冷和暖，能更加辨证地看待世界，是此
     # 题和彼题共同的“心愿“吧。
-    print answers_num # 输出：2441
-    print followers_num # 输出：26910
+    print answers_num  # 输出：2441
+    print followers_num  # 输出：26910
     for topic in topics:
-        print topic , # 输出：情感克制 现实 社会 个人经历
-    print top_answer 
+        print topic,  # 输出：情感克制 现实 社会 个人经历
+    print visit_times  # 输出: 该问题当前被浏览的次数
+    print top_answer  
     # 输出：<zhihu.Answer instance at 0x7f8b6582d0e0>
-    # 一个Answer类对象
-    print top_answers
+    # Answer类对象
+    print top_answers  
     # 输出：<generator object get_top_i_answers at 0x7fed676eb320>
     # 代表前十的Answer的生成器
-    print answers 
+    print answers  
     # 输出：<generator object get_all_answer at 0x7f8b66ba30a0>
     # 代表所有Answer的生成器
 
    
 Answer：获取答案信息
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Answer 代表了一个答案，处理知乎答案相关操作。创建一个 Answer 对象需传入该答案的 url ，如：
 
@@ -163,24 +205,32 @@ Answer 代表了一个答案，处理知乎答案相关操作。创建一个 Ans
     author = answer.get_author()
     # 获取该答案获得的赞同数
     upvote = answer.get_upvote()
+    # 获取该答案所属问题被浏览次数
+    visit_times = answer.get_visit_times()
+    # 获取所有给该答案点赞的用户信息
+    voters = answer.get_voters()
     # 把答案输出为txt文件
     answer.to_txt()
     # 把答案输出为markdown文件
     answer.to_md()
-    
-    print question 
+
+    print question
     # <zhihu.Question instance at 0x7f0b25d13f80>
     # 一个Question对象
-    print question.get_title() # 输出：现实可以有多美好？
-    print author 
+    print question.get_title()  # 输出：现实可以有多美好？
+    print author
     # <zhihu.User instance at 0x7f0b25425b90>
     # 一个User对象
-    print author.get_user_id() # 输出：田浩
-    print upvote # 输出：9320
+    print voters 
+    # <generator object get_voters at 0x7f32fbe55730>
+    # 代表所有该答案点赞的用户的生成器
+    print author.get_user_id()  # 输出：田浩
+    print upvote  # 输出：9320
+    print visit_times  # 输出: 改答案所属问题被浏览次数
 
 
 User：获取用户信息
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 User 代表一个用户，处理用户相关操作。创建一个 User 对象需传入该用户的 url ，如：
 
@@ -202,6 +252,8 @@ User 代表一个用户，处理用户相关操作。创建一个 User 对象需
     user = User(user_url)
     # 获取用户ID
     user_id = user.get_user_id()
+    # 获取用户性别
+    user_gender = user.get_gender()
     # 获取该用户的关注者人数
     followers_num = user.get_followers_num()
     # 获取该用户关注的人数
@@ -216,6 +268,8 @@ User 代表一个用户，处理用户相关操作。创建一个 User 对象需
     agree_num = user.get_agree_num()
     # 获取该用户获得的感谢数
     thanks_num = user.get_thanks_num()
+    # 获取该用户的头像url
+    head_img_url = user.get_head_img_url()
     
     # 获取该用户关注的人
     followees = user.get_followees()
@@ -236,6 +290,7 @@ User 代表一个用户，处理用户相关操作。创建一个 User 对象需
     print collections_num # 44
     print agree_num # 46387
     print thanks_num # 11477
+    print head_img_url  # https://pic2.zhimg.com/0626f4164009f291b26a79d96c6962c5_l.jpg
     
     print followees
     # <generator object get_followee at 0x7ffcac3af050>
@@ -255,7 +310,7 @@ User 代表一个用户，处理用户相关操作。创建一个 User 对象需
 
 
 Collection：获取收藏夹信息
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Collection 代表一个收藏夹，处理收藏夹相关操作。创建一个 Collection 对象需传入该收藏夹的 url ，如：
 
@@ -296,10 +351,108 @@ Collection 代表一个收藏夹，处理收藏夹相关操作。创建一个 Co
     print answers 
     # <generator object get_all_answer at 0x7fe12a29b280>
     # 代表所有答案的生成器对象
+
+
+Column：获取专栏信息
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Column 代表一个专栏，处理专栏相关操作。创建一个 Column 对象需传入该专栏的 url ，如：
+
+.. code-block:: python
+
+    from zhihu import Column
+    
+    url = "http://zhuanlan.zhihu.com/daily"
+    column = Column(url)
+
+得到 Column 对象后，可以获取该专栏的一些信息：
+
+.. code-block:: python
+
+    # -*- coding: utf-8 -*-
+    from zhihu import Column
+    
+    url = "http://zhuanlan.zhihu.com/daily"
+    column = Column(url)
+
+    # 获取该专栏的标题
+    title = column.get_title()
+    # 获取该专栏的描述
+    description = column.get_description()
+    # 获取该专栏的作者
+    creator = column.get_creator()
+    # 获取该专栏的文章数
+    posts_num = column.get_posts_num()
+    # 获取该专栏的所有文章
+    posts = column.get_all_posts()
+
+    print title  # 输出：知乎日报
+    print description
+    # 输出：
+    # 知乎日报启动画面接受所有摄影师朋友们的投稿，将作品链接
+    #（如 Flickr、LOFTER 等等），发至邮箱 qidong (at) zhihu.com，
+    # 并附上您的知乎个人页面地址即可。
+    # 
+    # 详细投稿要求: http://t.cn/zQyEpN5
+
+    print creator  
+    # 输出：<zhihu.User instance at 0x75e33eb8>
+    # User类对象
+    print posts_num # 150 
+    print posts
+    # 输出：<generator object get_all_posts at 0x75e33bc0>
+    # Post类对象
+
+
+Post：获取专栏文章信息
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Post 代表一个专栏文章，处理专栏文章相关操作。创建一个 Post 对象需传入该文章的 url ，如：
+
+.. code-block:: python
+
+    from zhihu import Post
+    
+    url = "http://zhuanlan.zhihu.com/p/20235601"
+    post = Post(url)
+
+得到 Post 对象后，可以获取该文章的一些信息：
+
+.. code-block:: python
+
+    # -*- coding: utf-8 -*-
+    from zhihu import Post
+    
+    url = "http://zhuanlan.zhihu.com/p/20770968"
+    post = Post(url)
+
+    # 获取该文章的标题
+    title = post.get_title()
+    # 获取该文章的内容
+    content = post.get_content()
+    # 获取该文章的作者
+    author = post.get_author()
+    # 获取该文章的所属专栏
+    column = post.get_column()
+    # 获取该文章所属话题
+    topics = post.get_topics()
+
+    print title  # 输出：夜读书|四月十九日
+    print content
+    # 输出：
+    # <p>各位，晚上好。<br> ...
+    # ......
+    print author
+    # 输出： <zhihu.User instance at 0x75ec0fd0>
+    for topic in topics:
+        print topic,  # 输出：阅读
+    print column  
+    # 输出：<zhihu.Column instance at 0x75eb3eb8>
+    # Column类对象
     
 
 综合实例
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 将 Question ， Answer ， User ， Collection 结合起来使用。实例如下：
 
@@ -406,6 +559,12 @@ zhihu.Question ---- 知乎问题操作类
   得到目前排名第一的回答。
  
   **Returns**： 代表该答案的 Answer 对象
+  
+ **get_visit_times** ()
+ 
+  得到该问题被浏览次数。该方法由 `@lufo816 <https://github.com/lufo816>`_ 添加。
+ 
+  **Returns**： 代表浏览次数的 int 型整数
  
 
 zhihu.User ---- 知乎用户操作类
@@ -426,7 +585,13 @@ zhihu.User ---- 知乎用户操作类
   得到该用户的ID。
   
   **Returns**： 代表 ID 的字符串
+
+ **get_gender** ()
  
+  得到该用户的性别。
+  
+ **Returns**： 代表 性别 的字符串(male/female)  
+  
  **get_followees_num** ()
  
   得到该用户关注的人的个数。
@@ -450,6 +615,14 @@ zhihu.User ---- 知乎用户操作类
   得到该用户获得的感谢数。
   
   **Returns**： 代表感谢数的 int 型整数
+
+ **get_head_img_url** (scale)
+
+  获取用户头像url。该方法由 `@liuwons <https://github.com/liuwons>`_ 添加。
+
+  **Parameters**： **scale** int 型整数，代表尺寸: 1(25×25), 3(75×75), 4(100×100), 6(150×150), 10(250×250)
+
+  **Returns**： 对应尺寸头像的图片链接, 字符串
  
  **get_asks_num** ()
  
@@ -539,6 +712,18 @@ zhihu.Answer ---- 知乎回答操作类
   得到该答案的内容。
   
   **Returns**： 一个 BeautifulSoup 对象
+  
+ **get_visit_times** ()
+ 
+  得到该答案所属问题被浏览次数。该方法由 `@lufo816 <https://github.com/lufo816>`_ 添加。
+ 
+  **Returns**： 代表浏览次数的 int 型整数
+  
+ **get_voters** ()
+ 
+  得到给该答案点赞的用户。该方法由 `@lufo816 <https://github.com/lufo816>`_ 添加。
+ 
+  **Returns**： 包含所有给该答案点赞的用户的 generator 对象。其中每一个元素为代表一个用户的 User 对象
  
  **to_txt** ()
   
@@ -590,11 +775,101 @@ zhihu.Collection ---- 知乎收藏夹操作类
   **Returns**： 包含该收藏夹下前 n 个回答的 generator 对象。其中每一个元素为代表一个回答的 Answer 对象
 
 
+zhihu.Column ---- 知乎专栏操作类
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-联系我
-----------
+*class* zhihu. **Column** (*Column_url*)
 
-- 知乎：`@egrcc <http://www.zhihu.com/people/egrcc>`_
-- 微博：`@egrcc <http://weibo.com/u/2948739432>`_
-- github：`@egrcc <https://github.com/egrcc>`_
-- email：zhaolujun1994@gmail.com
+ Column 以 url 为唯一标识，创建一个 Column 对象实例必须传入一个代表知乎专栏的 url （如：http://zhuanlan.zhihu.com/daily），需包含“http(s)://”。如果传入的不是代表专栏的 url ，程序会报错。通过调用 Column 类的一系列方法，获得该专栏的一些信息。该类由 `@johnnyluck <https://github.com/johnnyluck>`_ 添加。
+ 
+ **Parameters**：
+  * **column_url** -- 该专栏的链接，字符串
+  
+ **Returns**： 一个 Column 实例对象
+
+ **get_title** ()
+ 
+  得到该专栏的题目。
+  
+  **Returns**： 一个代表题目的字符串 
+ 
+ **get_creator** ()
+ 
+  得到该专栏的创建者。
+  
+  **Returns**： 一个 User 对象
+ 
+ **get_description** ()
+ 
+  得到该专栏的描述。
+  
+  **Returns**： 一个专栏描述的字符串
+
+ **get_followers_num** ()
+
+  得到该专栏的关注人数。
+
+  **Returns**： 一个 int 型的整数
+ 
+ **get_posts_num** ()
+
+  得到该专栏的所有文章数。
+
+  **Returns**： 一个 int 型的整数
+ 
+ **get_content** ()
+ 
+  得到该答案的内容。
+  
+  **Returns**： 一个字符串
+
+ **get_posts** ()
+
+  得到该专栏的所有文章。
+
+  **Returns**：包含所有文章的 generator 对象。其中每一个元素为代表一个文章 Post 对象
+ 
+
+zhihu.Post ---- 知乎专栏文章操作类
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*class* zhihu. **Post** (*Post_url*)
+
+ Post 以 url 为唯一标识，创建一个 Post 对象实例必须传入一个代表知乎文章的 url （如：http://zhuanlan.zhihu.com/p/20235601），需包含“http(s)://”。如果传入的不是代表文章的 url ，程序会报错。通过调用 Post 类的一系列方法，获得该文章的一些信息。该类由 `@johnnyluck <https://github.com/johnnyluck>`_ 添加。
+ 
+ **Parameters**：
+  * **post_url** -- 该文章的链接，字符串
+  
+ **Returns**： 一个 Post 实例对象
+
+ **get_title** ()
+ 
+  得到该文章的题目。
+  
+  **Returns**： 一个代表题目的字符串 
+ 
+ **get_author** ()
+ 
+  得到该文章的作者。
+  
+  **Returns**： 一个 User 对象
+ 
+ **get_content** ()
+ 
+  得到该文章的内容。
+  
+  **Returns**： 一个文章描述的字符串
+
+ **get_topics** ()
+ 
+  得到该文章的话题。
+  
+  **Returns**： 一个列表
+
+ **get_column** ()
+
+  得到该文章的所属专栏。
+
+  **Returns**：一个 Column 的实例对象
+ 
+
